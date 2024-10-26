@@ -8,6 +8,53 @@
 
 [AirGap](https://airgap.it) is a crypto wallet system that lets you secure cypto assets with one secret on an offline device. The AirGap Vault application is installed on a dedicated device that has no connection to any network, thus it is air gapped. The [AirGap Wallet](https://github.com/airgap-it/airgap-wallet) is installed on your everyday smartphone.
 
+## Megatron version
+
+Build a web version that can be served locally.
+
+Based in the github runs, because the original Build section of this document "down in this document" did not work in my machine.
+
+https://github.com/airgap-it/airgap-vault/actions/runs/11440806117/job/31827459216
+
+Not using netlify-cli to deploy and test
+I just run the web version with python server
+
+Build
+
+you can do just:
+
+```bash
+make all
+```
+
+```bash
+$ yarn install --frozen-lockfile
+$ yarn run build:no-sapling
+```
+Create Certificate
+
+The cert.pem and key.pem are created using this command left all questions by default, just press enter:
+
+```bash
+$ openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -keyout key.pem -out cert.pem
+```
+
+Run
+
+```bash
+$ python3 https_server.py
+```
+open firefox https://127.0.0.1:5000/
+there will be a warning about the certificate:
+Click "Advanced"
+click "Accept Risk and Continue"
+
+if you run make and you want to deploy just copy in usb and untar with:
+
+```bash
+tar -xf file_name.tar.gz
+```
+
 ## Description
 
 AirGap Vault is responsible for secure key generation. Entropy from audio, video, touch and accelerometer are used together with the output of the hardware random number generator. The generated secret is saved in the secure enclave of the device, only accessible by biometric authentication. Accounts for multiple protcols can be created. Transactions are prepared by the AirGap Wallet and then transferred to the offline device via QR code, where it is signed and sent back to the Wallet using another QR code.
