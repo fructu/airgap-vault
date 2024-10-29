@@ -37,3 +37,11 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 src/assets/protocol_modules/
+
+#megatron.thx {
+android/.settings/org.eclipse.buildship.core.prefs
+src/app/app.component.ts
+airgap-vault.tar.gz
+to_deploy/
+uitest/target/
+#}
