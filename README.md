@@ -80,7 +80,6 @@ Install on Tails
 update tails with:
 
 ```bash
-update tails
 sudo -s -- <<EOF
 apt update
 apt upgrade -y

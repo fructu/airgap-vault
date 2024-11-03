@@ -28,8 +28,8 @@ to_deploy/airgap-vault.zip: www/index.html create_deploy_dir www/cert.pem www/ke
 	cd to_deploy;tar -czvf airgap-vault.tar.gz airgap-vault
 
 create_deploy_dir:
-	mkdir -p to_deploy/airgap-vault/vault/vault/chromium_bk/cache/
-	mkdir -p to_deploy/airgap-vault/vault/vault/chromium_bk/config/
+	mkdir -p to_deploy/airgap-vault/vault/chromium_bk/cache/
+	mkdir -p to_deploy/airgap-vault/vault/chromium_bk/config/
 
 clean:
 	rm -rf to_deploy

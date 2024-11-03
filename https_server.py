@@ -10,25 +10,35 @@
 #
 #   https://127.0.0.1:5000/
 #
-
+# backups are done like this:
+#    tar -czvf vault/chromium_bk_0.tar.gz vault/chromium_bk/
+# to restore:
+#
+#   restore from Persistent:
+#
+#       rm -rf ~/.cache/chromium
+#       rm -rf ~/.config/chromium
+#       rm -rf ~/.config/dconfig
+#       rm -rf vault/cache
+#       rm -rf vault/config
+#       tar -xf vault/cache_chromium_bk_0.tar.gz
+#       tar -xf vault/config_chromium_bk_0.tar.gz
+#       tar -xf vault/config_dfconf_bk_0.tar.gz
+# 
+#   Note: bigger number in bk_#n.tar.gz does not imply newer
+#     to check last one see dates with this command
+#        ls -lhd vault/*
+#
 import http.server
 import ssl
 from multiprocessing import Process
 import subprocess
 from time import sleep
-import os
+from lib.backup import Backup
 
 IP = "127.0.0.1"
 PORT = 5000
 DIRECTORY = "www"
-
-# backups of previous directories
-directories_previous_total = 10
-directory_bk = "vault/chromium_bk/"
-directories_bk = (
-    ("~/.cache/", directory_bk+"cache/"),
-    ("~/.config/", directory_bk+"config/")
-)
 
 def get_ssl_context(certfile, keyfile):
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -55,60 +65,35 @@ def https_server_run():
     print("megatron.thx https server https://"+IP+":"+str(PORT)+"/")
     httpd.serve_forever()
 
-def backup_previous():
-    print("backup previous")
-    #directory_bk
-    for i in reversed(range(1, directories_previous_total)):
-        if i <= 1:
-            origin = directory_bk
-        else:
-            origin = directory_bk.replace("_bk/", "_bk_"+str(i-1)+"/")
-        destiny = directory_bk.replace("_bk/", "_bk_"+str(i)+"/")
+def isYes(question):
+    response = input(question)
+    if not response:
+        return False
 
-        command = "mkdir -p " + origin
-        print(command)
-        os.system(command)
+    if response[0].lower() == "y":
+        return True
 
-        command = "mkdir -p " + destiny
-        print(command)
-        os.system(command)
-
-        command = "cp -r -u " + origin + " " + destiny
-        print(command)
-        os.system(command)
-
-def pre_chromium():
-    print("restore from Persistent")
-    for destiny, origin in directories_bk:
-        command = "mkdir -p " + origin + "chromium "
-        print(command)
-        os.system(command)
-        command = "cp -r -u " + origin + "chromium " + destiny
-        print(command)
-        os.system(command)
-
-def post_chromium():
-    print("saving to Persistent")
-    for origin, destiny in directories_bk:
-        command = "cp -r -u " + origin + "chromium " + destiny
-        print(command)
-        os.system(command)
+    return False
 
 def chromium_open():
-    pre_chromium()
+    bk = Backup()
+    bk.pre_chromium()
     sleep(1)
     print('chromium "https://'+IP+':'+str(PORT)+'/"')
     code = subprocess.call(["chromium", "https://"+IP+":"+str(PORT)+"/"])
-    sleep(1)
-    post_chromium()
-    sleep(1)
+    print("-------------------------------------------------------")
+    print("if created a new wallet or do you want to save cookies")
+    if isYes("  backup y/n? "):
+        bk.run()
+        bk.post_chromium()
 
 def main():
-    print("megatron.thx airgap-vault v1.0")
-    backup_previous()
+    print("megatron.thx airgap-vault v1.4")
+
     server = Process(target=https_server_run)
     server.start()
     chromium_open()
     server.terminate()
+    input("press any key to close window ...")
 
 main()

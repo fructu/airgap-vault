@@ -44,4 +44,5 @@ src/app/app.component.ts
 airgap-vault.tar.gz
 to_deploy/
 uitest/target/
+lib/__pycache__/
 #}
