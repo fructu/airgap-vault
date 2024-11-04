@@ -24,6 +24,7 @@ to_deploy/airgap-vault.zip: www/index.html create_deploy_dir www/cert.pem www/ke
 	echo "Preparing deploy directory"
 	cp -r www to_deploy/airgap-vault
 	cp https_server.py to_deploy/airgap-vault
+	cp -r lib to_deploy/airgap-vault
 	cp README.md to_deploy/airgap-vault
 	cd to_deploy;tar -czvf airgap-vault.tar.gz airgap-vault
 
@@ -34,4 +35,3 @@ create_deploy_dir:
 clean:
 	rm -rf to_deploy
 	rm -rf www
-

@@ -10,6 +10,8 @@
 
 ## Megatron version
 
+ **Warning:** Only run https_server.py in a TailsOS where chromium is only used for this vault.
+
 Build a web version that can be served locally inside TailOS offline.
 
 ** Once you have updated TailsOS DO NOT CONNECT IT ONLINE AGAIN then generate/import the seed **
