@@ -16,6 +16,18 @@ Build a web version that can be served locally inside TailOS offline.
 
 ** Once you have updated TailsOS DO NOT CONNECT IT ONLINE AGAIN then generate/import the seed **
 
+my files:
+
+```code
+git whatchanged --author="fructu" --name-only --oneline | sort | uniq -c
+
+.gitignore
+https_server.py
+lib/backup.py
+lib/__init__.py
+Makefile
+README.md
+```
 
 You need a TailOS USB:
 
